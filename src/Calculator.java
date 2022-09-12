@@ -4,38 +4,51 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Calculator extends JFrame {
-    JFrame frame;
-    JButton[] numButtons;
-    JButton[] operButtons;
-    public JTextField textField1;
-    public JTextField textField2;
+    public JButton[] numButtons;
+    public JButton[] operButtons;
+    public JButton[] memoryButtons;
     public String stroka = "";
+    private String memory = "0";
+
     public String sim;
 
+    public JLabel memLabel;
+    public JLabel label;
+    public JTextField textField2;
+
     Calculator() {
-        frame = new JFrame("Калькулятор");
+        JFrame frame = new JFrame("Калькулятор");
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         setDefaultLookAndFeelDecorated(true);
-        frame.setBounds(100, 100, 400, 620);
+        frame.setBounds(100, 100, 400, 800);
         frame.setLayout(null);
         Font f = new Font(Font.DIALOG, Font.BOLD | Font.ITALIC, 20);
         Font f1 = new Font(Font.DIALOG, Font.BOLD, 40);
         frame.setVisible(true);
 
         JPanel jPanel = new JPanel();
-        jPanel.setBounds(5, 5, 380, 600);
+        jPanel.setBounds(5, 5, 380, 800);
         jPanel.setVisible(true);
         jPanel.setBackground(Color.lightGray);
         jPanel.setLayout(null);
         frame.add(jPanel);
 
-        textField1 = new JTextField();
-        textField1.setBounds(20, 10, 340, 25);
-        textField1.setVisible(true);
-        textField1.setBackground(Color.lightGray);
-        textField1.setHorizontalAlignment(JTextField.RIGHT);
-        textField1.setBorder(null);
-        jPanel.add(textField1);
+        label = new JLabel();
+        label.setBounds(80, 10, 240, 25);
+        label.setVisible(true);
+        label.setBackground(Color.WHITE);
+        label.setHorizontalAlignment(JTextField.RIGHT);
+        label.setBorder(null);
+        jPanel.add(label);
+
+        memLabel = new JLabel();
+        memLabel.setBounds(20, 10, 50, 25);
+        memLabel.setVisible(true);
+        memLabel.setBackground(Color.lightGray);
+        memLabel.setHorizontalAlignment(JTextField.RIGHT);
+        memLabel.setBorder(null);
+        jPanel.add(memLabel);
+
 
         textField2 = new JTextField();
         textField2.setBounds(20, 60, 340, 50);
@@ -46,6 +59,39 @@ public class Calculator extends JFrame {
         textField2.setBorder(null);
         jPanel.add(textField2);
         jPanel.repaint();
+        memoryButtons = new JButton[5];
+        for (int i = 0; i <= 4; i++) {
+            memoryButtons[i] = new JButton();
+            memoryButtons[i].setBounds(i * 70 + 10, 120, 70, 50);
+            memoryButtons[i].setText(textOfMemButton(i));
+            memoryButtons[i].setVisible(true);
+            int finalI = i;
+            //  int finalI1 = i;
+            memoryButtons[i].addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (memoryButtons[finalI].getText().equals("MC")) {
+                        memory = "0";
+                        System.out.println(memory);
+                    } else if (memoryButtons[finalI].getText().equals("MR")) {
+                        textField2.setText(memory);
+                        System.out.println(memory);
+                        System.out.println(textField2.getText());
+                    } else if (memoryButtons[finalI].getText().equals("M+")) {
+                        memory = Double.toString(Double.parseDouble(memory) + Double.parseDouble(textField2.getText()));
+                        System.out.println(memory);
+                    } else if (memoryButtons[finalI].getText().equals("M-")) {
+                        memory = Double.toString(Double.parseDouble(memory) - Double.parseDouble(textField2.getText()));
+                        System.out.println(memory);
+                    } else if (memoryButtons[finalI].getText().equals("MS")) {
+                        memLabel.setText(memory);
+                        System.out.println(memory);
+                    }
+                }
+            });
+            jPanel.add(memoryButtons[i]);
+        }
+        jPanel.repaint();
 
         numButtons = new JButton[18];
         int n = 0;
@@ -53,26 +99,27 @@ public class Calculator extends JFrame {
             for (int j = 0; j < 3; j++) {
                 int k = i + j + n;
                 numButtons[k] = new JButton();
-                numButtons[k].setBounds(j * 5 + j * 80 + 20, i * 80 + 120, 80, 80);
+                numButtons[k].setBounds(j * 5 + j * 80 + 20, i * 80 + 220, 80, 80);
                 numButtons[k].setText(textOfNumButton(k));
                 numButtons[k].setFont(f);
                 numButtons[k].setVisible(true);
                 numButtons[k].addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        if ((numButtons[k].getText() != "=")) {
+                        if (!(numButtons[k].getText().equals("="))) {
                             sim = numButtons[k].getText();
                             stroka = stroka + sim;
                             System.out.println(" Тут " + stroka);
-                            textField1.setText(stroka);
+                            label.setText(stroka);
                             textField2.setText(stroka);
-                        } else if (!(stroka.isEmpty())) {
+                        } else if (!(textField2.getText().isEmpty())) {
                             sim = numButtons[k].getText();
                             float res = (float) new LogicCalc().resultOperation(stroka);
                             textField2.setText(Float.toString(res));
-                            textField1.setText(stroka + sim);
+                            label.setText(stroka + sim);
                             System.out.println("Это туе " + stroka + sim);
                             stroka = "";
+
                         }
                     }
                 });
@@ -84,7 +131,7 @@ public class Calculator extends JFrame {
         operButtons = new JButton[4];
         for (int i = 0; i < 4; i++) {
             operButtons[i] = new JButton();
-            operButtons[i].setBounds(280, i * 80 + 120, 80, 80);
+            operButtons[i].setBounds(280, i * 80 + 220, 80, 80);
             operButtons[i].setVisible(true);
             operButtons[i].setFont(f);
             operButtons[i].setText(textOfOperButton(i));
@@ -98,12 +145,12 @@ public class Calculator extends JFrame {
                             stroka = stroka.substring(0, stroka.length() - 1);
                             sim = operButtons[finalI].getText();
                             stroka = stroka + sim;
+
                         } else {
                             sim = operButtons[finalI].getText();
                             stroka = stroka + sim;
                         }
-                    } else {
-                      //  textField2.setText("0");
+                    } else if (!textField2.getText().isEmpty()) {
                         stroka = Float.toString(Float.parseFloat(textField2.getText()));
                         sim = operButtons[finalI].getText();
                         stroka = stroka + sim;
@@ -114,7 +161,7 @@ public class Calculator extends JFrame {
             jPanel.add(operButtons[i]);
         }
         JButton clearButton = new JButton();
-        clearButton.setBounds(20, 440, 150, 80);
+        clearButton.setBounds(20, 540, 150, 80);
         clearButton.setText("Очистить");
         clearButton.setFont(f);
         clearButton.setVisible(true);
@@ -122,12 +169,30 @@ public class Calculator extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 textField2.setText("");
-                textField1.setText("");
+                label.setText("");
                 stroka = "";
             }
         });
         jPanel.add(clearButton);
         jPanel.repaint();
+    }
+
+    private String textOfMemButton(int num) {
+        switch (num) {
+            case 0:
+                return "MC";
+
+            case 1:
+                return "MR";
+            case 2:
+                return "M+";
+            case 3:
+                return "M-";
+            case 4:
+                return "MS";
+            default:
+                return "";
+        }
     }
 
     private String textOfOperButton(int num) {
