@@ -9,9 +9,7 @@ public class Calculator extends JFrame {
     public JButton[] memoryButtons;
     public String stroka = "";
     private String memory = "0";
-
     public String sim;
-
     public JLabel memLabel;
     public JLabel label;
     public JTextField textField2;
@@ -49,7 +47,6 @@ public class Calculator extends JFrame {
         memLabel.setBorder(null);
         jPanel.add(memLabel);
 
-
         textField2 = new JTextField();
         textField2.setBounds(20, 60, 340, 50);
         textField2.setVisible(true);
@@ -66,7 +63,6 @@ public class Calculator extends JFrame {
             memoryButtons[i].setText(textOfMemButton(i));
             memoryButtons[i].setVisible(true);
             int finalI = i;
-            //  int finalI1 = i;
             memoryButtons[i].addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -75,17 +71,12 @@ public class Calculator extends JFrame {
                         System.out.println(memory);
                     } else if (memoryButtons[finalI].getText().equals("MR")) {
                         textField2.setText(memory);
-                        System.out.println(memory);
-                        System.out.println(textField2.getText());
                     } else if (memoryButtons[finalI].getText().equals("M+")) {
                         memory = Double.toString(Double.parseDouble(memory) + Double.parseDouble(textField2.getText()));
-                        System.out.println(memory);
                     } else if (memoryButtons[finalI].getText().equals("M-")) {
                         memory = Double.toString(Double.parseDouble(memory) - Double.parseDouble(textField2.getText()));
-                        System.out.println(memory);
                     } else if (memoryButtons[finalI].getText().equals("MS")) {
                         memLabel.setText(memory);
-                        System.out.println(memory);
                     }
                 }
             });
@@ -109,7 +100,6 @@ public class Calculator extends JFrame {
                         if (!(numButtons[k].getText().equals("="))) {
                             sim = numButtons[k].getText();
                             stroka = stroka + sim;
-                            System.out.println(" Тут " + stroka);
                             label.setText(stroka);
                             textField2.setText(stroka);
                         } else if (!(textField2.getText().isEmpty())) {
@@ -117,9 +107,7 @@ public class Calculator extends JFrame {
                             float res = (float) new LogicCalc().resultOperation(stroka);
                             textField2.setText(Float.toString(res));
                             label.setText(stroka + sim);
-                            System.out.println("Это туе " + stroka + sim);
                             stroka = "";
-
                         }
                     }
                 });
@@ -136,7 +124,6 @@ public class Calculator extends JFrame {
             operButtons[i].setFont(f);
             operButtons[i].setText(textOfOperButton(i));
             int finalI = i;
-
             operButtons[i].addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -145,7 +132,6 @@ public class Calculator extends JFrame {
                             stroka = stroka.substring(0, stroka.length() - 1);
                             sim = operButtons[finalI].getText();
                             stroka = stroka + sim;
-
                         } else {
                             sim = operButtons[finalI].getText();
                             stroka = stroka + sim;
@@ -154,12 +140,12 @@ public class Calculator extends JFrame {
                         stroka = Float.toString(Float.parseFloat(textField2.getText()));
                         sim = operButtons[finalI].getText();
                         stroka = stroka + sim;
-
                     }
                 }
             });
             jPanel.add(operButtons[i]);
         }
+
         JButton clearButton = new JButton();
         clearButton.setBounds(20, 540, 150, 80);
         clearButton.setText("Очистить");
